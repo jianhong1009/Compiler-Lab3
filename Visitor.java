@@ -9,6 +9,7 @@ public class Visitor extends lab3BaseVisitor<Void> {
     public static ArrayList<Variable> variableList = new ArrayList<>();
     public static int num = 0;
     public boolean endFlag = false;
+    public boolean funcFlag = false;
 
     public Visitor() throws FileNotFoundException {
         System.setOut(ps);
@@ -23,6 +24,10 @@ public class Visitor extends lab3BaseVisitor<Void> {
     // done
     @Override
     public Void visitFuncDef(lab3Parser.FuncDefContext ctx) {
+        System.out.println("declare i32 @getint()");
+        System.out.println("declare void @putint(i32)");
+        System.out.println("declare i32 @getch()");
+        System.out.println("declare void @putch(i32)");
         System.out.print("define dso_local ");
         return super.visitFuncDef(ctx);
     }
@@ -65,7 +70,13 @@ public class Visitor extends lab3BaseVisitor<Void> {
             int temp = ++num;
             exp = "";
             visit(ctx.exp());
-            String s = new PostfixExpression().func(exp);
+            String s = "";
+            if (!funcFlag) {
+                s = new PostfixExpression().func(exp);
+            } else {
+                s = "%" + num;
+                funcFlag = false;
+            }
             System.out.println("    store i32 " + s + ", i32* %" + temp);
             System.out.println("    %" + (num + 1) + " = load i32, i32* %" + temp);
             num++;
@@ -73,13 +84,25 @@ public class Visitor extends lab3BaseVisitor<Void> {
         } else if (ctx.return_() != null) {
             exp = "";
             visit(ctx.exp());
-            String s = new PostfixExpression().func(exp);
+            String s = "";
+            if (!funcFlag) {
+                s = new PostfixExpression().func(exp);
+            } else {
+                s = "%" + num;
+                funcFlag = false;
+            }
             System.out.println("    ret i32 " + s);
             endFlag = true;
         } else {
             exp = "";
             visit(ctx.exp());
-            String s = new PostfixExpression().func(exp);
+            String s = "";
+            if (!funcFlag) {
+                s = new PostfixExpression().func(exp);
+            } else {
+                s = "%" + num;
+                funcFlag = false;
+            }
         }
         return null;
     }
@@ -129,7 +152,13 @@ public class Visitor extends lab3BaseVisitor<Void> {
         int temp = ++num;
         exp = "";
         visit(ctx.constInitVal());
-        String s = new PostfixExpression().func(exp);
+        String s = "";
+        if (!funcFlag) {
+            s = new PostfixExpression().func(exp);
+        } else {
+            s = "%" + num;
+            funcFlag = false;
+        }
         System.out.println("    store i32 " + s + ", i32* %" + temp);
         System.out.println("    %" + (num + 1) + " = load i32, i32* %" + temp);
         num++;
@@ -169,7 +198,13 @@ public class Visitor extends lab3BaseVisitor<Void> {
             int temp = ++num;
             exp = "";
             visit(ctx.initVal());
-            String s = new PostfixExpression().func(exp);
+            String s = "";
+            if (!funcFlag) {
+                s = new PostfixExpression().func(exp);
+            } else {
+                s = "%" + num;
+                funcFlag = false;
+            }
             System.out.println("    store i32 " + s + ", i32* %" + temp);
             System.out.println("    %" + (num + 1) + " = load i32, i32* %" + temp);
             num++;
@@ -214,7 +249,44 @@ public class Visitor extends lab3BaseVisitor<Void> {
 
     @Override
     public Void visitUnaryExp(lab3Parser.UnaryExpContext ctx) {
-        return super.visitUnaryExp(ctx);
+        if (ctx.primaryExp() != null) {
+            visit(ctx.primaryExp());
+        } else if (ctx.ident() != null) {
+            String func = ctx.ident().getText();
+            if (func.equals("getint") || func.equals("getch") || func.equals("putint") || func.equals("putch")) {
+                if (func.equals("getint") && ctx.funcRParams() == null) {
+                    System.out.println("    %" + (num + 1) + " = call i32 @getint()");
+                    num++;
+                    funcFlag = true;
+                } else if (func.equals("putint") && ctx.funcRParams() != null) {
+                    exp = "";
+                    visit(ctx.funcRParams());
+                    String s = new PostfixExpression().func(exp);
+                    System.out.println("    call void @putint(i32 " + s + ")");
+                    num++;
+                    funcFlag = true;
+                }else if (func.equals("getch") && ctx.funcRParams() == null) {
+                    System.out.println("    %" + (num + 1) + " = call i32 @getch()");
+                    num++;
+                    funcFlag = true;
+                }else if (func.equals("putch") && ctx.funcRParams() != null) {
+                    exp = "";
+                    visit(ctx.funcRParams());
+                    String s = new PostfixExpression().func(exp);
+                    System.out.println("    call void @putch(i32 " + s + ")");
+                    num++;
+                    funcFlag = true;
+                } else {
+                    System.exit(1);
+                }
+            } else {
+                System.exit(1);
+            }
+        } else {
+            visit(ctx.unaryOp());
+            visit(ctx.unaryExp());
+        }
+        return null;
     }
 
     @Override
