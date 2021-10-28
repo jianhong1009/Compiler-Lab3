@@ -267,7 +267,6 @@ public class Visitor extends lab3BaseVisitor<Void> {
                     visit(ctx.funcRParams());
                     String s = new PostfixExpression().func(exp);
                     System.out.println("    call void @putint(i32 " + s + ")");
-                    num++;
                     funcFlag = true;
                 } else if (func.equals("getch") && ctx.funcRParams() == null) {
                     System.out.println("    %" + (num + 1) + " = call i32 @getch()");
@@ -278,7 +277,6 @@ public class Visitor extends lab3BaseVisitor<Void> {
                     visit(ctx.funcRParams());
                     String s = new PostfixExpression().func(exp);
                     System.out.println("    call void @putch(i32 " + s + ")");
-                    num++;
                     funcFlag = true;
                 } else {
                     System.exit(1);
