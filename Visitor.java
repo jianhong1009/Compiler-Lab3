@@ -154,7 +154,6 @@ public class Visitor extends lab3BaseVisitor<Void> {
         visit(ctx.constInitVal());
         String s = "";
         if (!funcFlag) {
-            //s = new PostfixExpression().func(exp);
             char[] str1 = exp.toCharArray();
             for (int i = 0; i < str1.length; i++) {
                 String string = "";
@@ -176,6 +175,7 @@ public class Visitor extends lab3BaseVisitor<Void> {
                     flag = false;
                 }
             }
+            s = new PostfixExpression().func(exp);
         } else {
             s = "%" + num;
             funcFlag = false;
