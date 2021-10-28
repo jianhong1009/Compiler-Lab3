@@ -154,20 +154,28 @@ public class Visitor extends lab3BaseVisitor<Void> {
         visit(ctx.constInitVal());
         String s = "";
         if (!funcFlag) {
-            s = new PostfixExpression().func(exp);
-//            char[] str1 = exp.toCharArray();
-//            String string = "";
-//            boolean flag = false;
-//            for (int i = 0; i < str1.length; i++) {
-//                if (Character.isLetter(str1[i]) || str1[i] == '_') {
-//                    string += str1[i];
-//                    i++;
-//                    flag = true;
-//                    for (; i < str1.length && (Character.isDigit(str1[i]) || Character.isLetter(str1[i]) || str1[i] == '_'); i++) {
-//                        string += str1[i];
-//                    }
-//                }
-//            }
+            //s = new PostfixExpression().func(exp);
+            char[] str1 = exp.toCharArray();
+            for (int i = 0; i < str1.length; i++) {
+                String string = "";
+                boolean flag = false;
+                if (Character.isLetter(str1[i]) || str1[i] == '_') {
+                    string += str1[i];
+                    i++;
+                    flag = true;
+                    for (; i < str1.length && (Character.isDigit(str1[i]) || Character.isLetter(str1[i]) || str1[i] == '_'); i++) {
+                        string += str1[i];
+                    }
+                }
+                if (flag) {
+                    Variable.checkExist(string);
+                    if (!Variable.isConst(string)) {
+                        System.exit(1);
+                    }
+                    i--;
+                    flag = false;
+                }
+            }
         } else {
             s = "%" + num;
             funcFlag = false;
