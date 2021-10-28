@@ -8,6 +8,7 @@ public class Visitor extends lab3BaseVisitor<Void> {
     public static String exp = "";
     public static ArrayList<Variable> variableList = new ArrayList<>();
     public static int num = 0;
+    public boolean endFlag = false;
 
     public Visitor() throws FileNotFoundException {
         System.setOut(ps);
@@ -40,6 +41,9 @@ public class Visitor extends lab3BaseVisitor<Void> {
         for (lab3Parser.BlockItemContext e : ctx.blockItem()) {
             visit(e);
         }
+        if (!endFlag) {
+            System.out.println("    ret i32 0");
+        }
         System.out.println("}");
         return null;
     }
@@ -71,6 +75,11 @@ public class Visitor extends lab3BaseVisitor<Void> {
             visit(ctx.exp());
             String s = new PostfixExpression().func(exp);
             System.out.println("    ret i32 " + s);
+            endFlag = true;
+        } else {
+            exp = "";
+            visit(ctx.exp());
+            String s = new PostfixExpression().func(exp);
         }
         return null;
     }
