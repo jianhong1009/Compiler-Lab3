@@ -28,11 +28,9 @@ public class Variable {
         }
     }
 
-    public static void checkStatus(String name) {
+    public static void checkExist(String name) {
         for (Variable v : Visitor.variableList) {
-            if (v.name.equals(name) && v.status == 1) {
-                System.exit(1);
-            } else if (v.name.equals(name) && v.status == 2) {
+            if (v.name.equals(name)) {
                 return;
             }
         }

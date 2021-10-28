@@ -58,7 +58,7 @@ public class PostfixExpression {
                 }
             }
             if (flag) {
-                Variable.checkStatus(string);
+                Variable.checkExist(string);
                 list.add(Variable.getId(string));
                 i--;
                 flag = false;

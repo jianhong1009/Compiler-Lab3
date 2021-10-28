@@ -191,7 +191,11 @@ public class Visitor extends lab3BaseVisitor<Void> {
         Variable.checkRepeat(ctx.ident().getText());
         if (ctx.initVal() == null) {
             String var = ctx.ident().getText();
-            variableList.add(new Variable(var, "null", 1, false));
+            System.out.println("    %" + (num + 1) + " = alloca i32");
+            int temp = ++num;
+            System.out.println("    %" + (num + 1) + " = load i32, i32* %" + temp);
+            num++;
+            variableList.add(new Variable(var, "%" + num, 1, false));
         } else {
             String var = ctx.ident().getText();
             System.out.println("    %" + (num + 1) + " = alloca i32");
@@ -265,11 +269,11 @@ public class Visitor extends lab3BaseVisitor<Void> {
                     System.out.println("    call void @putint(i32 " + s + ")");
                     num++;
                     funcFlag = true;
-                }else if (func.equals("getch") && ctx.funcRParams() == null) {
+                } else if (func.equals("getch") && ctx.funcRParams() == null) {
                     System.out.println("    %" + (num + 1) + " = call i32 @getch()");
                     num++;
                     funcFlag = true;
-                }else if (func.equals("putch") && ctx.funcRParams() != null) {
+                } else if (func.equals("putch") && ctx.funcRParams() != null) {
                     exp = "";
                     visit(ctx.funcRParams());
                     String s = new PostfixExpression().func(exp);
