@@ -20,6 +20,14 @@ public class Variable {
         return null;
     }
 
+    public static void checkRepeat(String name) {
+        for (Variable v : Visitor.variableList) {
+            if (v.name.equals(name)) {
+                System.exit(1);
+            }
+        }
+    }
+
     public static void checkStatus(String name) {
         for (Variable v : Visitor.variableList) {
             if (v.name.equals(name) && v.status == 1) {

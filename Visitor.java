@@ -114,6 +114,7 @@ public class Visitor extends lab3BaseVisitor<Void> {
     // done
     @Override
     public Void visitConstDef(lab3Parser.ConstDefContext ctx) {
+        Variable.checkRepeat(ctx.ident().getText());
         String var = ctx.ident().getText();
         System.out.println("    %" + (num + 1) + " = alloca i32");
         int temp = ++num;
@@ -149,6 +150,7 @@ public class Visitor extends lab3BaseVisitor<Void> {
     // done
     @Override
     public Void visitVarDef(lab3Parser.VarDefContext ctx) {
+        Variable.checkRepeat(ctx.ident().getText());
         if (ctx.initVal() == null) {
             String var = ctx.ident().getText();
             variableList.add(new Variable(var, "null", 1, false));
