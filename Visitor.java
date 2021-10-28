@@ -155,6 +155,19 @@ public class Visitor extends lab3BaseVisitor<Void> {
         String s = "";
         if (!funcFlag) {
             s = new PostfixExpression().func(exp);
+//            char[] str1 = exp.toCharArray();
+//            String string = "";
+//            boolean flag = false;
+//            for (int i = 0; i < str1.length; i++) {
+//                if (Character.isLetter(str1[i]) || str1[i] == '_') {
+//                    string += str1[i];
+//                    i++;
+//                    flag = true;
+//                    for (; i < str1.length && (Character.isDigit(str1[i]) || Character.isLetter(str1[i]) || str1[i] == '_'); i++) {
+//                        string += str1[i];
+//                    }
+//                }
+//            }
         } else {
             s = "%" + num;
             funcFlag = false;

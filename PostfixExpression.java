@@ -50,11 +50,11 @@ public class PostfixExpression {
             boolean flag = false;
 
             if (Character.isLetter(str1[i]) || str1[i] == '_') {
-                string += str[i];
+                string += str1[i];
                 i++;
                 flag = true;
                 for (; i < str1.length && (Character.isDigit(str1[i]) || Character.isLetter(str1[i]) || str1[i] == '_'); i++) {
-                    string += str[i];
+                    string += str1[i];
                 }
             }
             if (flag) {
